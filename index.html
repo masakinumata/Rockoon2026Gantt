@@ -6,45 +6,148 @@
 <title>えひめロックーン 2026 ガントチャート</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:#f9f8f5;padding:24px;}
-.gc-wrap{background:#fff;border-radius:12px;padding:24px 28px;max-width:1100px;margin:0 auto;border:0.5px solid #ddd;}
-.gc-header{margin-bottom:20px;}
-.gc-title{font-size:20px;font-weight:600;color:#1a1a18;margin-bottom:4px;}
-.gc-sub{font-size:13px;color:#888;}
-.filter-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
-.filter-btn{font-size:12px;padding:4px 12px;border-radius:8px;border:0.5px solid #bbb;background:#fff;color:#666;cursor:pointer;transition:all .15s;}
-.filter-btn.active{background:#e6f1fb;color:#185fa5;border-color:transparent;}
-.filter-btn:hover{background:#f1efe8;}
-.chart-area{overflow-x:auto;}
-.inner{min-width:900px;}
-.month-hdr{display:flex;margin-bottom:6px;}
-.task-row{display:flex;align-items:center;margin-bottom:3px;}
-.task-label{font-size:12px;color:#2c2c2a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:8px;flex-shrink:0;}
-.task-label.sub{color:#888;font-size:11px;padding-left:12px;}
-.bar-cell{position:relative;height:22px;flex-shrink:0;}
-.bar{position:absolute;top:3px;height:16px;border-radius:4px;display:flex;align-items:center;padding:0 6px;font-size:10px;font-weight:500;white-space:nowrap;overflow:hidden;cursor:default;}
-.bar.blue{background:#B5D4F4;color:#0C447C;}
-.bar.teal{background:#9FE1CB;color:#085041;}
-.bar.amber{background:#FAC775;color:#633806;}
-.bar.coral{background:#F5C4B3;color:#712B13;}
-.bar.purple{background:#CECBF6;color:#3C3489;}
-.bar.green{background:#C0DD97;color:#27500A;}
-.bar.gray{background:#D3D1C7;color:#444441;}
-.bar.pink{background:#F4C0D1;color:#72243E;}
-.milestone{position:absolute;top:50%;transform:translateY(-50%) rotate(45deg);width:13px;height:13px;background:#E24B4A;border-radius:2px;cursor:default;}
-.section-label{font-size:11px;font-weight:600;color:#888;padding:8px 0 2px;letter-spacing:.04em;}
-.today-line{position:absolute;top:0;bottom:0;width:1.5px;background:#E24B4A;opacity:.65;pointer-events:none;z-index:3;}
-.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px;padding-top:16px;border-top:0.5px solid #e5e3db;}
-.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#666;}
-.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
-.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:3px;}
-.done{background:#639922;}.inprog{background:#BA7517;}.todo{background:#888780;}
+body{
+  font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;
+  background:linear-gradient(135deg,#e8f0fe 0%,#fef9f3 50%,#f0fdf4 100%);
+  min-height:100vh;padding:32px 24px;
+}
+.gc-wrap{
+  background:rgba(255,255,255,0.93);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-radius:20px;padding:28px 32px;max-width:1160px;margin:0 auto;
+  border:1px solid rgba(255,255,255,0.8);
+  box-shadow:0 12px 48px rgba(0,0,0,0.07),0 2px 8px rgba(0,0,0,0.04);
+}
+.gc-header{margin-bottom:24px;}
+.gc-header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:8px;}
+.gc-title{font-size:22px;font-weight:700;color:#0f172a;letter-spacing:-0.02em;}
+.gc-badge{font-size:11px;font-weight:700;padding:4px 14px;border-radius:20px;background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;letter-spacing:0.05em;}
+.gc-sub{font-size:13px;color:#94a3b8;line-height:1.5;}
+.filter-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #f1f5f9;}
+.filter-btn{
+  font-size:12px;font-weight:500;padding:5px 16px;border-radius:20px;
+  border:1.5px solid #e2e8f0;background:#fff;color:#64748b;cursor:pointer;
+  transition:all 0.2s ease;letter-spacing:0.01em;
+}
+.filter-btn.active{
+  background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;border-color:transparent;
+  box-shadow:0 4px 12px rgba(79,70,229,0.3);transform:translateY(-1px);
+}
+.filter-btn:hover:not(.active){
+  background:#f8fafc;border-color:#cbd5e1;transform:translateY(-1px);
+  box-shadow:0 2px 6px rgba(0,0,0,0.06);
+}
+.chart-area{overflow-x:auto;border-radius:10px;}
+.chart-area::-webkit-scrollbar{height:6px;}
+.chart-area::-webkit-scrollbar-track{background:#f8fafc;border-radius:3px;}
+.chart-area::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px;}
+.chart-area::-webkit-scrollbar-thumb:hover{background:#94a3b8;}
+.inner{min-width:920px;}
+.task-row{display:flex;align-items:center;margin-bottom:3px;border-radius:6px;padding:1px 0;transition:background 0.15s;}
+.task-row:hover{background:rgba(241,245,249,0.8);}
+.task-label{font-size:12px;color:#334155;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:10px;flex-shrink:0;transition:color 0.15s;}
+.task-label.sub{color:#94a3b8;font-size:11px;padding-left:14px;}
+.task-row:hover .task-label{color:#0f172a;}
+.bar-cell{position:relative;height:26px;flex-shrink:0;}
+.bar{
+  position:absolute;top:4px;height:18px;border-radius:5px;
+  display:flex;align-items:center;padding:0 7px;
+  font-size:10px;font-weight:600;white-space:nowrap;overflow:hidden;cursor:default;
+  transform-origin:left center;
+  animation:barSlideIn 0.4s cubic-bezier(0.4,0,0.2,1) both;
+  transition:filter 0.15s,box-shadow 0.15s;
+}
+.bar:hover{filter:brightness(1.08) saturate(1.1);box-shadow:0 4px 14px rgba(0,0,0,0.15);z-index:10;}
+@keyframes barSlideIn{
+  from{transform:scaleX(0.04);opacity:0;}
+  to  {transform:scaleX(1);opacity:1;}
+}
+.bar.blue  {background:linear-gradient(90deg,#C9E0F8,#7BBCED);color:#0a3d7a;}
+.bar.teal  {background:linear-gradient(90deg,#AAEBD6,#4DC9A8);color:#064e3b;}
+.bar.amber {background:linear-gradient(90deg,#FCD88E,#F5A823);color:#5a3205;}
+.bar.coral {background:linear-gradient(90deg,#F9D0C2,#EC9070);color:#712B13;}
+.bar.purple{background:linear-gradient(90deg,#DAD7F9,#ABAAE9);color:#3C3489;}
+.bar.green {background:linear-gradient(90deg,#CCDF9E,#95C84A);color:#1e400a;}
+.bar.gray  {background:linear-gradient(90deg,#DEDAD3,#B8B5AA);color:#3a3a37;}
+.bar.pink  {background:linear-gradient(90deg,#F7C9D9,#EE93B5);color:#72243E;}
+.milestone{
+  position:absolute;top:50%;transform:translateY(-50%) rotate(45deg);
+  width:14px;height:14px;background:linear-gradient(135deg,#f87171,#dc2626);
+  border-radius:3px;cursor:default;
+  box-shadow:0 2px 8px rgba(220,38,38,0.4);
+  animation:milestoneIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+  transition:box-shadow 0.15s;
+}
+.milestone:hover{box-shadow:0 4px 16px rgba(220,38,38,0.6);}
+@keyframes milestoneIn{
+  from{transform:translateY(-50%) rotate(45deg) scale(0);opacity:0;}
+  to  {transform:translateY(-50%) rotate(45deg) scale(1);opacity:1;}
+}
+.section-label{
+  font-size:10.5px;font-weight:700;color:#94a3b8;
+  padding:10px 0 3px;letter-spacing:.07em;text-transform:uppercase;
+  display:flex;align-items:center;
+}
+.section-label::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,#e2e8f0 0%,transparent 100%);
+  margin-left:8px;
+}
+.month-col{
+  font-size:11px;font-weight:700;color:#94a3b8;
+  padding-left:6px;border-left:1.5px solid #e2e8f0;
+  letter-spacing:0.04em;display:flex;align-items:center;
+}
+.today-line{
+  position:absolute;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,#f87171,#dc2626);
+  pointer-events:none;z-index:3;border-radius:1px;
+  animation:todayPulse 2.5s ease-in-out infinite;
+}
+@keyframes todayPulse{
+  0%,100%{box-shadow:0 0 6px rgba(220,38,38,0.4);opacity:0.8;}
+  50%    {box-shadow:0 0 18px rgba(220,38,38,0.8);opacity:1;}
+}
+.week-line{position:absolute;top:0;bottom:0;width:1px;background:#f1f5f9;pointer-events:none;z-index:0;}
+.status-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;flex-shrink:0;}
+.done  {background:#22c55e;}
+.inprog{background:#f59e0b;}
+.todo  {background:#94a3b8;}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px;padding-top:16px;border-top:1px solid #f1f5f9;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#64748b;font-weight:500;}
+.legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,0.1);}
+
+#gc-tooltip{
+  position:fixed;z-index:9999;
+  background:rgba(15,23,42,0.94);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  color:#f1f5f9;padding:12px 16px;border-radius:12px;
+  font-size:12px;pointer-events:none;max-width:280px;min-width:200px;
+  box-shadow:0 16px 40px rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);
+  opacity:0;transform:translateY(5px) scale(0.97);
+  transition:opacity 0.15s ease,transform 0.15s ease;
+}
+#gc-tooltip.visible{opacity:1;transform:translateY(0) scale(1);}
+.tt-title{font-weight:700;font-size:13px;margin-bottom:8px;color:#f8fafc;line-height:1.4;}
+.tt-row{color:#94a3b8;margin-top:4px;font-size:11.5px;line-height:1.5;}
+.tt-row strong{color:#e2e8f0;}
+.tt-note{color:#94a3b8;margin-top:6px;font-size:11px;line-height:1.5;border-left:2px solid rgba(255,255,255,0.15);padding-left:7px;}
+.tt-footer{display:flex;align-items:center;margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.07);}
+.tt-status{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:10px;font-size:10.5px;font-weight:600;white-space:nowrap;}
+.tt-status.done  {background:rgba(34,197,94,0.2); color:#86efac;}
+.tt-status.inprog{background:rgba(245,158,11,0.2);color:#fcd34d;}
+.tt-status.todo  {background:rgba(148,163,184,0.2);color:#cbd5e1;}
+.tt-progress{flex:1;margin-left:10px;height:3px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;}
+.tt-progress-fill{height:100%;border-radius:2px;}
 </style>
 </head>
 <body>
 <div class="gc-wrap">
   <div class="gc-header">
-    <div class="gc-title">えひめロックーン 2026 ガントチャート</div>
+    <div class="gc-header-top">
+      <div class="gc-title">えひめロックーン 2026 ガントチャート</div>
+      <div class="gc-badge">2026</div>
+    </div>
     <div class="gc-sub">6月〜8月 ／ 班別タスク・試験スケジュール（議事録・試験一覧・審査書より作成）</div>
   </div>
 
@@ -65,198 +168,276 @@ body{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans
   </div>
 
   <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:#B5D4F4;"></div>全体</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#F5C4B3;"></div>点火</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#CECBF6;"></div>姿勢</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#9FE1CB;"></div>分離</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#FAC775;"></div>観測</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#C0DD97;"></div>カメラ</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#D3D1C7;"></div>構造</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#F4C0D1;"></div>電装</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#E24B4A;border-radius:2px;transform:rotate(45deg);"></div>マイルストーン</div>
+    <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(90deg,#C9E0F8,#7BBCED);"></div>全体</div>
+    <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(90deg,#F9D0C2,#EC9070);"></div>点火</div>
+    <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(90deg,#DAD7F9,#ABAAE9);"></div>姿勢</div>
+    <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(90deg,#AAEBD6,#4DC9A8);"></div>分離</div>
+    <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(90deg,#FCD88E,#F5A823);"></div>観測</div>
+    <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(90deg,#CCDF9E,#95C84A);"></div>カメラ</div>
+    <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(90deg,#DEDAD3,#B8B5AA);"></div>構造</div>
+    <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(90deg,#F7C9D9,#EE93B5);"></div>電装</div>
+    <div class="legend-item"><div class="legend-dot" style="background:linear-gradient(135deg,#f87171,#dc2626);transform:rotate(45deg);border-radius:2px;"></div>マイルストーン</div>
     <div class="legend-item"><span class="status-dot done"></span>完了</div>
     <div class="legend-item"><span class="status-dot inprog"></span>進行中</div>
     <div class="legend-item"><span class="status-dot todo"></span>未着手</div>
   </div>
 </div>
 
+<div id="gc-tooltip"></div>
+
 <script>
 const START = new Date(2026,5,1);
 const END   = new Date(2026,8,30);
 const TOTAL_DAYS = (END - START) / 86400000;
 const TODAY = new Date(2026,5,1);
-const LABEL_W = 170;
-const BAR_W   = 660;
+const LABEL_W = 175;
+const BAR_W   = 680;
 
 function dayOf(d){ return (new Date(d) - START) / 86400000; }
-function pct(d){ return Math.max(0, Math.min(100, dayOf(d) / TOTAL_DAYS * 100)); }
+function pct(d){ return Math.max(0, Math.min(100, dayOf(d)/TOTAL_DAYS*100)); }
 function pctSpan(s,e){
   const sp = pct(s), ep = pct(e);
-  return {left: sp+'%', width: Math.max(ep-sp, 1.2)+'%'};
+  return {left:sp+'%', width:Math.max(ep-sp,1.2)+'%'};
 }
+function fmtDate(d){
+  const dt = new Date(d);
+  return `${dt.getMonth()+1}/${dt.getDate()}`;
+}
+
+const STATUS_LABEL = {done:'完了', inprog:'進行中', todo:'未着手'};
+const PROGRESS     = {done:100, inprog:50, todo:0};
+const PROG_COLOR   = {done:'#22c55e', inprog:'#f59e0b', todo:'#94a3b8'};
 
 const tasks = [
-  {group:'overall', section:'全体', label:'審査書提出', sub:false, start:'2026-06-01', end:'2026-06-08', color:'blue', status:'inprog', note:'ペイロード・電装・試験一覧を含む'},
-  {group:'overall', section:'', label:'OBGミッションレビュー会', sub:false, start:'2026-06-14', end:'2026-06-14', color:'blue', status:'todo', note:'6/14（日）確定', milestone:true},
-  {group:'overall', section:'', label:'2次審査書提出', sub:false, start:'2026-08-10', end:'2026-08-20', color:'blue', status:'todo', note:'8月中旬'},
-  {group:'overall', section:'', label:'ロングラン試験（宇都宮）', sub:false, start:'2026-08-20', end:'2026-08-31', color:'blue', status:'todo', note:'エスペック予定次第'},
+  {group:'overall',  section:'全体', label:'審査書提出',                      sub:false, start:'2026-06-01', end:'2026-06-08', color:'blue',   status:'inprog', note:'ペイロード・電装・試験一覧を含む'},
+  {group:'overall',  section:'',     label:'OBGミッションレビュー会',          sub:false, start:'2026-06-14', end:'2026-06-14', color:'blue',   status:'todo',   note:'6/14（日）確定', milestone:true},
+  {group:'overall',  section:'',     label:'2次審査書提出',                    sub:false, start:'2026-08-10', end:'2026-08-20', color:'blue',   status:'todo',   note:'8月中旬'},
+  {group:'overall',  section:'',     label:'ロングラン試験（宇都宮）',         sub:false, start:'2026-08-20', end:'2026-08-31', color:'blue',   status:'todo',   note:'エスペック予定次第'},
 
-  {group:'ignition', section:'点火', label:'低圧点火試験（開発）', sub:false, start:'2026-06-01', end:'2026-06-15', color:'coral', status:'inprog', note:'もう1回実施予定。プラグ製法確立'},
-  {group:'ignition', section:'', label:'点火基板発注・動作確認', sub:false, start:'2026-06-10', end:'2026-06-25', color:'coral', status:'todo', note:'担当：沼田。6月中旬発注'},
-  {group:'ignition', section:'', label:'低温低圧点火試験（開発）', sub:false, start:'2026-06-15', end:'2026-07-15', color:'coral', status:'todo', note:'低圧成功後に移行'},
-  {group:'ignition', section:'', label:'ヒーター試験（常温・低温）', sub:false, start:'2026-06-10', end:'2026-07-10', color:'coral', status:'inprog', note:'酒井担当。再試験予定'},
-  {group:'ignition', section:'', label:'イグナイタープラグ振動試験', sub:true, start:'2026-07-01', end:'2026-07-20', color:'coral', status:'todo', note:''},
-  {group:'ignition', section:'', label:'ロケット発射試験（Wランチャー）', sub:false, start:'2026-07-10', end:'2026-08-01', color:'coral', status:'todo', note:'審査書後からロケット製作開始'},
-  {group:'ignition', section:'', label:'低温低圧シーケンス確認試験', sub:true, start:'2026-07-15', end:'2026-08-10', color:'coral', status:'todo', note:''},
-  {group:'ignition', section:'', label:'点火統合試験（FM）', sub:false, start:'2026-07-21', end:'2026-07-31', color:'coral', status:'todo', note:'ランチャーFMとセット'},
+  {group:'ignition', section:'点火', label:'低圧点火試験（開発）',             sub:false, start:'2026-06-01', end:'2026-06-15', color:'coral',  status:'inprog', note:'もう1回実施予定。プラグ製法確立'},
+  {group:'ignition', section:'',     label:'点火基板発注・動作確認',           sub:false, start:'2026-06-10', end:'2026-06-25', color:'coral',  status:'todo',   note:'担当：沼田。6月中旬発注'},
+  {group:'ignition', section:'',     label:'低温低圧点火試験（開発）',         sub:false, start:'2026-06-15', end:'2026-07-15', color:'coral',  status:'todo',   note:'低圧成功後に移行'},
+  {group:'ignition', section:'',     label:'ヒーター試験（常温・低温）',       sub:false, start:'2026-06-10', end:'2026-07-10', color:'coral',  status:'inprog', note:'酒井担当。再試験予定'},
+  {group:'ignition', section:'',     label:'イグナイタープラグ振動試験',       sub:true,  start:'2026-07-01', end:'2026-07-20', color:'coral',  status:'todo',   note:''},
+  {group:'ignition', section:'',     label:'ロケット発射試験（Wランチャー）',  sub:false, start:'2026-07-10', end:'2026-08-01', color:'coral',  status:'todo',   note:'審査書後からロケット製作開始'},
+  {group:'ignition', section:'',     label:'低温低圧シーケンス確認試験',       sub:true,  start:'2026-07-15', end:'2026-08-10', color:'coral',  status:'todo',   note:''},
+  {group:'ignition', section:'',     label:'点火統合試験（FM）',               sub:false, start:'2026-07-21', end:'2026-07-31', color:'coral',  status:'todo',   note:'ランチャーFMとセット'},
 
-  {group:'attitude', section:'姿勢', label:'しめじ1号機改 組み立て・試験', sub:false, start:'2026-06-01', end:'2026-06-20', color:'purple', status:'inprog', note:'印刷中→三嶋担当。試験は木村'},
-  {group:'attitude', section:'', label:'姿勢基板BBM発注・動作確認', sub:false, start:'2026-06-10', end:'2026-06-30', color:'purple', status:'todo', note:'担当：田嶋。6月中旬発注'},
-  {group:'attitude', section:'', label:'CMGトルク測定', sub:true, start:'2026-06-15', end:'2026-06-30', color:'purple', status:'todo', note:'1号機改で計測。トルク不足の懸念あり'},
-  {group:'attitude', section:'', label:'しめじ3号機 構造・電装設計', sub:false, start:'2026-06-01', end:'2026-07-15', color:'purple', status:'inprog', note:'構造：佐々木。ICMテスト完了'},
-  {group:'attitude', section:'', label:'3号機全機能動作試験（開発）', sub:false, start:'2026-07-01', end:'2026-07-25', color:'purple', status:'todo', note:'すべての機能が問題なく使えるか確認'},
-  {group:'attitude', section:'', label:'水密ボックス水密試験（開発）', sub:true, start:'2026-07-10', end:'2026-07-31', color:'purple', status:'todo', note:''},
-  {group:'attitude', section:'', label:'3号機低温低圧試験（認定）', sub:false, start:'2026-07-20', end:'2026-08-15', color:'purple', status:'todo', note:'認定試験'},
+  {group:'attitude', section:'姿勢', label:'しめじ1号機改 組み立て・試験',    sub:false, start:'2026-06-01', end:'2026-06-20', color:'purple', status:'inprog', note:'印刷中→三嶋担当。試験は木村'},
+  {group:'attitude', section:'',     label:'姿勢基板BBM発注・動作確認',        sub:false, start:'2026-06-10', end:'2026-06-30', color:'purple', status:'todo',   note:'担当：田嶋。6月中旬発注'},
+  {group:'attitude', section:'',     label:'CMGトルク測定',                    sub:true,  start:'2026-06-15', end:'2026-06-30', color:'purple', status:'todo',   note:'1号機改で計測。トルク不足の懸念あり'},
+  {group:'attitude', section:'',     label:'しめじ3号機 構造・電装設計',       sub:false, start:'2026-06-01', end:'2026-07-15', color:'purple', status:'inprog', note:'構造：佐々木。ICMテスト完了'},
+  {group:'attitude', section:'',     label:'3号機全機能動作試験（開発）',      sub:false, start:'2026-07-01', end:'2026-07-25', color:'purple', status:'todo',   note:'すべての機能が問題なく使えるか確認'},
+  {group:'attitude', section:'',     label:'水密ボックス水密試験（開発）',     sub:true,  start:'2026-07-10', end:'2026-07-31', color:'purple', status:'todo',   note:''},
+  {group:'attitude', section:'',     label:'3号機低温低圧試験（認定）',        sub:false, start:'2026-07-20', end:'2026-08-15', color:'purple', status:'todo',   note:'認定試験'},
 
-  {group:'separation', section:'分離', label:'引張試験・最終方式決定', sub:false, start:'2026-06-01', end:'2026-06-20', color:'teal', status:'inprog', note:'古寺案 vs 三嶋案。サーボ選定も'},
-  {group:'separation', section:'', label:'分離基板発注（3種）', sub:false, start:'2026-06-10', end:'2026-06-25', color:'teal', status:'todo', note:'アップリンク:青山 サーボBBM:櫻井 ニクロム線BBM:築山'},
-  {group:'separation', section:'', label:'本番搭載モデル製作', sub:false, start:'2026-06-20', end:'2026-07-15', color:'teal', status:'todo', note:'方式確定後すぐ開始'},
-  {group:'separation', section:'', label:'認定試験（低温耐久・引張・スイング）', sub:false, start:'2026-06-25', end:'2026-08-15', color:'teal', status:'todo', note:'6末〜8中旬。2時間耐久・振幅30°×100回'},
-  {group:'separation', section:'', label:'水密試験', sub:true, start:'2026-07-01', end:'2026-08-01', color:'teal', status:'todo', note:''},
+  {group:'separation',section:'分離',label:'引張試験・最終方式決定',           sub:false, start:'2026-06-01', end:'2026-06-20', color:'teal',   status:'inprog', note:'古寺案 vs 三嶋案。サーボ選定も'},
+  {group:'separation',section:'',    label:'分離基板発注（3種）',              sub:false, start:'2026-06-10', end:'2026-06-25', color:'teal',   status:'todo',   note:'アップリンク:青山 サーボBBM:櫻井 ニクロム線BBM:築山'},
+  {group:'separation',section:'',    label:'本番搭載モデル製作',               sub:false, start:'2026-06-20', end:'2026-07-15', color:'teal',   status:'todo',   note:'方式確定後すぐ開始'},
+  {group:'separation',section:'',    label:'認定試験（低温耐久・引張・スイング）',sub:false,start:'2026-06-25',end:'2026-08-15',color:'teal',   status:'todo',   note:'6末〜8中旬。2時間耐久・振幅30°×100回'},
+  {group:'separation',section:'',    label:'水密試験',                         sub:true,  start:'2026-07-01', end:'2026-08-01', color:'teal',   status:'todo',   note:''},
 
-  {group:'observation', section:'観測', label:'ミューオン部品調達・回路設計', sub:false, start:'2026-06-01', end:'2026-07-01', color:'amber', status:'inprog', note:'最大ボトルネック。酒井父の検出器流用'},
-  {group:'observation', section:'', label:'センサー統合（ユニバーサル基板）', sub:false, start:'2026-06-01', end:'2026-06-20', color:'amber', status:'inprog', note:'5月中から継続'},
-  {group:'observation', section:'', label:'観測基板発注', sub:false, start:'2026-06-10', end:'2026-06-25', color:'amber', status:'todo', note:'6月中旬'},
-  {group:'observation', section:'', label:'水密対応', sub:false, start:'2026-06-20', end:'2026-07-31', color:'amber', status:'todo', note:'6月後半〜期末'},
-  {group:'observation', section:'', label:'ペイロード完成', sub:false, start:'2026-07-20', end:'2026-08-05', color:'amber', status:'todo', note:'8月頭が目標'},
+  {group:'observation',section:'観測',label:'ミューオン部品調達・回路設計',   sub:false, start:'2026-06-01', end:'2026-07-01', color:'amber',  status:'inprog', note:'最大ボトルネック。酒井父の検出器流用'},
+  {group:'observation',section:'',    label:'センサー統合（ユニバーサル基板）',sub:false, start:'2026-06-01', end:'2026-06-20', color:'amber',  status:'inprog', note:'5月中から継続'},
+  {group:'observation',section:'',    label:'観測基板発注',                    sub:false, start:'2026-06-10', end:'2026-06-25', color:'amber',  status:'todo',   note:'6月中旬'},
+  {group:'observation',section:'',    label:'水密対応',                        sub:false, start:'2026-06-20', end:'2026-07-31', color:'amber',  status:'todo',   note:'6月後半〜期末'},
+  {group:'observation',section:'',    label:'ペイロード完成',                  sub:false, start:'2026-07-20', end:'2026-08-05', color:'amber',  status:'todo',   note:'8月頭が目標'},
 
-  {group:'camera', section:'カメラ', label:'トラッカー製作完了', sub:false, start:'2026-06-01', end:'2026-06-08', color:'green', status:'inprog', note:'審査書までに完成。一発勝負の発泡加工'},
-  {group:'camera', section:'', label:'ESP低圧試験', sub:true, start:'2026-06-05', end:'2026-06-25', color:'green', status:'todo', note:'低温試験は成功済み'},
-  {group:'camera', section:'', label:'GoPro原因究明・低温試験', sub:false, start:'2026-06-10', end:'2026-07-10', color:'green', status:'todo', note:'くろちゃん問題の解消'},
-  {group:'camera', section:'', label:'Insta360 高温試験・水密試験', sub:false, start:'2026-06-15', end:'2026-07-20', color:'green', status:'todo', note:'ヒートシンク+遮熱ケース検証'},
-  {group:'camera', section:'', label:'各カメラ 低温低圧耐久試験（認定）', sub:false, start:'2026-07-01', end:'2026-08-10', color:'green', status:'todo', note:'GoPro・Insta360・ESP全て'},
-  {group:'camera', section:'', label:'カメラ統合試験', sub:false, start:'2026-08-05', end:'2026-08-20', color:'green', status:'todo', note:'全カメラ同時動作確認'},
+  {group:'camera',   section:'カメラ',label:'トラッカー製作完了',              sub:false, start:'2026-06-01', end:'2026-06-08', color:'green',  status:'inprog', note:'審査書までに完成。一発勝負の発泡加工'},
+  {group:'camera',   section:'',      label:'ESP低圧試験',                     sub:true,  start:'2026-06-05', end:'2026-06-25', color:'green',  status:'todo',   note:'低温試験は成功済み'},
+  {group:'camera',   section:'',      label:'GoPro原因究明・低温試験',         sub:false, start:'2026-06-10', end:'2026-07-10', color:'green',  status:'todo',   note:'くろちゃん問題の解消'},
+  {group:'camera',   section:'',      label:'Insta360 高温試験・水密試験',     sub:false, start:'2026-06-15', end:'2026-07-20', color:'green',  status:'todo',   note:'ヒートシンク+遮熱ケース検証'},
+  {group:'camera',   section:'',      label:'各カメラ 低温低圧耐久試験（認定）',sub:false,start:'2026-07-01', end:'2026-08-10', color:'green',  status:'todo',   note:'GoPro・Insta360・ESP全て'},
+  {group:'camera',   section:'',      label:'カメラ統合試験',                  sub:false, start:'2026-08-05', end:'2026-08-20', color:'green',  status:'todo',   note:'全カメラ同時動作確認'},
 
-  {group:'structure', section:'構造', label:'ランチャーEM設計→審査書掲載', sub:false, start:'2026-06-01', end:'2026-06-08', color:'gray', status:'inprog', note:'水密BOX仕様確定が前提'},
-  {group:'structure', section:'', label:'ランチャー・ロケット製作（FM）', sub:false, start:'2026-06-14', end:'2026-07-07', color:'gray', status:'todo', note:'審査書提出後スタート'},
-  {group:'structure', section:'', label:'ランチャーFM試験（点火統合）', sub:false, start:'2026-07-21', end:'2026-07-28', color:'gray', status:'todo', note:''},
-  {group:'structure', section:'', label:'FM予備製作', sub:false, start:'2026-07-28', end:'2026-08-14', color:'gray', status:'todo', note:''},
-  {group:'structure', section:'', label:'パラシュート製作（大中小）', sub:false, start:'2026-06-14', end:'2026-07-31', color:'gray', status:'todo', note:'新入生も参加予定'},
-  {group:'structure', section:'', label:'パラシュート落下試験', sub:true, start:'2026-07-15', end:'2026-08-15', color:'gray', status:'todo', note:''},
-  {group:'structure', section:'', label:'浮力試験・M2E試験', sub:true, start:'2026-07-20', end:'2026-08-20', color:'gray', status:'todo', note:'2次審査書まで'},
+  {group:'structure',section:'構造',  label:'ランチャーEM設計→審査書掲載',    sub:false, start:'2026-06-01', end:'2026-06-08', color:'gray',   status:'inprog', note:'水密BOX仕様確定が前提'},
+  {group:'structure',section:'',      label:'ランチャー・ロケット製作（FM）',  sub:false, start:'2026-06-14', end:'2026-07-07', color:'gray',   status:'todo',   note:'審査書提出後スタート'},
+  {group:'structure',section:'',      label:'ランチャーFM試験（点火統合）',    sub:false, start:'2026-07-21', end:'2026-07-28', color:'gray',   status:'todo',   note:''},
+  {group:'structure',section:'',      label:'FM予備製作',                      sub:false, start:'2026-07-28', end:'2026-08-14', color:'gray',   status:'todo',   note:''},
+  {group:'structure',section:'',      label:'パラシュート製作（大中小）',      sub:false, start:'2026-06-14', end:'2026-07-31', color:'gray',   status:'todo',   note:'新入生も参加予定'},
+  {group:'structure',section:'',      label:'パラシュート落下試験',            sub:true,  start:'2026-07-15', end:'2026-08-15', color:'gray',   status:'todo',   note:''},
+  {group:'structure',section:'',      label:'浮力試験・M2E試験',               sub:true,  start:'2026-07-20', end:'2026-08-20', color:'gray',   status:'todo',   note:'2次審査書まで'},
 
-  {group:'avionics', section:'電装', label:'全基板設計確定・一括発注', sub:false, start:'2026-06-01', end:'2026-06-20', color:'pink', status:'inprog', note:'点火・姿勢・分離（3種）・観測'},
-  {group:'avionics', section:'', label:'基板動作確認（全班）', sub:false, start:'2026-06-20', end:'2026-07-10', color:'pink', status:'todo', note:'届き次第すぐ確認'},
-  {group:'avionics', section:'', label:'地上局設計・通信試験（LoRa）', sub:false, start:'2026-06-08', end:'2026-07-15', color:'pink', status:'todo', note:'担当：佐藤。審査書後スタート'},
-  {group:'avionics', section:'', label:'電装認定試験（低温・通信）', sub:false, start:'2026-07-01', end:'2026-08-15', color:'pink', status:'todo', note:''},
-  {group:'avionics', section:'', label:'全体統合試験', sub:false, start:'2026-08-10', end:'2026-08-28', color:'pink', status:'todo', note:'全ミッション統合'},
+  {group:'avionics', section:'電装',  label:'全基板設計確定・一括発注',        sub:false, start:'2026-06-01', end:'2026-06-20', color:'pink',   status:'inprog', note:'点火・姿勢・分離（3種）・観測'},
+  {group:'avionics', section:'',      label:'基板動作確認（全班）',             sub:false, start:'2026-06-20', end:'2026-07-10', color:'pink',   status:'todo',   note:'届き次第すぐ確認'},
+  {group:'avionics', section:'',      label:'地上局設計・通信試験（LoRa）',    sub:false, start:'2026-06-08', end:'2026-07-15', color:'pink',   status:'todo',   note:'担当：佐藤。審査書後スタート'},
+  {group:'avionics', section:'',      label:'電装認定試験（低温・通信）',       sub:false, start:'2026-07-01', end:'2026-08-15', color:'pink',   status:'todo',   note:''},
+  {group:'avionics', section:'',      label:'全体統合試験',                    sub:false, start:'2026-08-10', end:'2026-08-28', color:'pink',   status:'todo',   note:'全ミッション統合'},
 ];
 
-let activeGroup = 'all';
+// --- Tooltip ---
+const ttEl = document.getElementById('gc-tooltip');
+let hideTimer;
 
-function render(){
-  const vis = activeGroup === 'all' ? tasks : tasks.filter(t => t.group === activeGroup);
-  const chart = document.getElementById('chart');
-  chart.innerHTML = '';
-  const COL_W = LABEL_W + BAR_W;
-  const wrap = document.createElement('div');
-  wrap.style.cssText = `position:relative;width:${COL_W}px;`;
-
-  // Month headers
-  const hdr = document.createElement('div');
-  hdr.style.cssText = 'display:flex;margin-bottom:4px;';
-  const lbl0 = document.createElement('div');
-  lbl0.style.cssText = `width:${LABEL_W}px;flex-shrink:0;`;
-  hdr.appendChild(lbl0);
-  const monthWrap = document.createElement('div');
-  monthWrap.style.cssText = `width:${BAR_W}px;position:relative;display:flex;`;
-  const months = ['6月','7月','8月'];
-  const mStarts = [new Date(2026,5,1),new Date(2026,6,1),new Date(2026,7,1)];
-  const mEnds   = [new Date(2026,6,1),new Date(2026,7,1),new Date(2026,8,30)];
-  months.forEach((m,i) => {
-    const d = document.createElement('div');
-    const w = (mEnds[i]-mStarts[i])/86400000/TOTAL_DAYS*100;
-    d.style.cssText = `width:${w}%;font-size:11px;font-weight:600;color:#888;padding-left:4px;border-left:0.5px solid #ddd;`;
-    d.textContent = m;
-    monthWrap.appendChild(d);
-  });
-  hdr.appendChild(monthWrap);
-  wrap.appendChild(hdr);
-
-  const barArea = document.createElement('div');
-  barArea.style.cssText = 'position:relative;';
-
-  // Today line
-  const todayX = LABEL_W + pct(TODAY)/100*BAR_W;
-  const tl = document.createElement('div');
-  tl.className = 'today-line';
-  tl.style.left = todayX+'px';
-  barArea.appendChild(tl);
-
-  let lastSec = '';
-  vis.forEach(t => {
-    if(t.section && t.section !== lastSec){
-      lastSec = t.section;
-      const sec = document.createElement('div');
-      sec.className = 'section-label';
-      sec.style.cssText = `padding-left:${LABEL_W}px;`;
-      sec.textContent = t.section;
-      barArea.appendChild(sec);
-    }
-    const row = document.createElement('div');
-    row.className = 'task-row';
-
-    const lbl = document.createElement('div');
-    lbl.className = 'task-label'+(t.sub?' sub':'');
-    lbl.style.cssText = `width:${LABEL_W}px;`;
-    lbl.textContent = t.label;
-    lbl.title = t.label+(t.note?'\n'+t.note:'');
-    row.appendChild(lbl);
-
-    const cell = document.createElement('div');
-    cell.className = 'bar-cell';
-    cell.style.cssText = `width:${BAR_W}px;position:relative;height:22px;`;
-
-    if(t.milestone){
-      const ms = document.createElement('div');
-      ms.className = 'milestone';
-      ms.style.left = (pct(t.start)/100*BAR_W - 6.5)+'px';
-      ms.title = t.label+(t.note?'\n'+t.note:'');
-      cell.appendChild(ms);
-    } else {
-      const p = pctSpan(t.start, t.end);
-      const bar = document.createElement('div');
-      bar.className = 'bar '+t.color;
-      bar.style.left = parseFloat(p.left)/100*BAR_W+'px';
-      bar.style.width = parseFloat(p.width)/100*BAR_W+'px';
-      bar.title = t.label+(t.note?'\n'+t.note:'');
-      const dot = document.createElement('span');
-      dot.className = 'status-dot '+t.status;
-      dot.style.cssText = 'display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:3px;flex-shrink:0;';
-      bar.appendChild(dot);
-      const bw = parseFloat(p.width)/100*BAR_W;
-      if(bw > 55){
-        const txt = document.createTextNode(t.label.length>14?t.label.substring(0,13)+'…':t.label);
-        bar.appendChild(txt);
-      }
-      cell.appendChild(bar);
-    }
-    row.appendChild(cell);
-    barArea.appendChild(row);
-  });
-
-  wrap.appendChild(barArea);
-  chart.appendChild(wrap);
+function showTooltip(e, t){
+  clearTimeout(hideTimer);
+  const period = t.milestone ? fmtDate(t.start) : `${fmtDate(t.start)} → ${fmtDate(t.end)}`;
+  const noteHtml = t.note ? `<div class="tt-note">${t.note}</div>` : '';
+  const progHtml = t.milestone ? '' :
+    `<div class="tt-progress"><div class="tt-progress-fill" style="width:${PROGRESS[t.status]}%;background:${PROG_COLOR[t.status]};"></div></div>`;
+  ttEl.innerHTML = `
+    <div class="tt-title">${t.label}</div>
+    <div class="tt-row"><strong>${period}</strong></div>
+    ${noteHtml}
+    <div class="tt-footer">
+      <span class="tt-status ${t.status}">${STATUS_LABEL[t.status]}</span>
+      ${progHtml}
+    </div>`;
+  placeTooltip(e);
+  ttEl.classList.add('visible');
 }
 
-document.getElementById('filters').addEventListener('click', e => {
+function placeTooltip(e){
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const x = e.clientX + 16, y = e.clientY - 12;
+  ttEl.style.left = Math.min(x, vw - 296) + 'px';
+  ttEl.style.top  = Math.min(y, vh - 140) + 'px';
+}
+
+function hideTooltip(){ hideTimer = setTimeout(()=>ttEl.classList.remove('visible'), 80); }
+
+// --- Render ---
+let activeGroup = 'all';
+
+function render(animate){
+  const vis = activeGroup === 'all' ? tasks : tasks.filter(t=>t.group===activeGroup);
+  const chart = document.getElementById('chart');
+  const COL_W = LABEL_W + BAR_W;
+
+  function build(){
+    chart.innerHTML = '';
+    const wrap = document.createElement('div');
+    wrap.style.cssText = `position:relative;width:${COL_W}px;`;
+
+    // Month header
+    const hdr = document.createElement('div');
+    hdr.style.cssText = 'display:flex;margin-bottom:6px;';
+    const lbl0 = document.createElement('div');
+    lbl0.style.cssText = `width:${LABEL_W}px;flex-shrink:0;`;
+    hdr.appendChild(lbl0);
+    const mWrap = document.createElement('div');
+    mWrap.style.cssText = `width:${BAR_W}px;display:flex;`;
+    const months = ['6月','7月','8月'];
+    const mS = [new Date(2026,5,1),new Date(2026,6,1),new Date(2026,7,1)];
+    const mE = [new Date(2026,6,1),new Date(2026,7,1),new Date(2026,8,30)];
+    months.forEach((m,i)=>{
+      const d = document.createElement('div');
+      d.className = 'month-col';
+      d.style.width = ((mE[i]-mS[i])/86400000/TOTAL_DAYS*100)+'%';
+      d.textContent = m;
+      mWrap.appendChild(d);
+    });
+    hdr.appendChild(mWrap);
+    wrap.appendChild(hdr);
+
+    const area = document.createElement('div');
+    area.style.cssText = 'position:relative;';
+
+    // Week grid lines
+    let cur = new Date(START);
+    while(cur <= END){
+      const wl = document.createElement('div');
+      wl.className = 'week-line';
+      wl.style.left = (LABEL_W + pct(cur)/100*BAR_W)+'px';
+      area.appendChild(wl);
+      cur = new Date(cur.getTime() + 7*86400000);
+    }
+
+    // Today line
+    const tl = document.createElement('div');
+    tl.className = 'today-line';
+    tl.style.left = (LABEL_W + pct(TODAY)/100*BAR_W)+'px';
+    area.appendChild(tl);
+
+    let lastSec = '', idx = 0;
+    vis.forEach(t=>{
+      if(t.section && t.section !== lastSec){
+        lastSec = t.section;
+        const sec = document.createElement('div');
+        sec.className = 'section-label';
+        sec.style.paddingLeft = LABEL_W+'px';
+        sec.textContent = t.section;
+        area.appendChild(sec);
+      }
+
+      const row = document.createElement('div');
+      row.className = 'task-row';
+
+      const lbl = document.createElement('div');
+      lbl.className = 'task-label'+(t.sub?' sub':'');
+      lbl.style.width = LABEL_W+'px';
+      lbl.textContent = t.label;
+      row.appendChild(lbl);
+
+      const cell = document.createElement('div');
+      cell.className = 'bar-cell';
+      cell.style.cssText = `width:${BAR_W}px;position:relative;height:26px;`;
+
+      if(t.milestone){
+        const ms = document.createElement('div');
+        ms.className = 'milestone';
+        ms.style.left = (pct(t.start)/100*BAR_W - 7)+'px';
+        ms.style.animationDelay = (idx*28+60)+'ms';
+        ms.addEventListener('mouseenter', e=>showTooltip(e,t));
+        ms.addEventListener('mousemove', placeTooltip);
+        ms.addEventListener('mouseleave', hideTooltip);
+        cell.appendChild(ms);
+      } else {
+        const p = pctSpan(t.start, t.end);
+        const leftPx  = parseFloat(p.left)/100*BAR_W;
+        const widthPx = parseFloat(p.width)/100*BAR_W;
+        const bar = document.createElement('div');
+        bar.className = 'bar '+t.color;
+        bar.style.left  = leftPx+'px';
+        bar.style.width = widthPx+'px';
+        bar.style.animationDelay = (idx*25+60)+'ms';
+        bar.addEventListener('mouseenter', e=>showTooltip(e,t));
+        bar.addEventListener('mousemove', placeTooltip);
+        bar.addEventListener('mouseleave', hideTooltip);
+
+        const dot = document.createElement('span');
+        dot.className = 'status-dot '+t.status;
+        dot.style.cssText = 'display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;flex-shrink:0;';
+        bar.appendChild(dot);
+
+        if(widthPx > 50){
+          bar.appendChild(document.createTextNode(
+            t.label.length>14 ? t.label.substring(0,13)+'…' : t.label
+          ));
+        }
+        cell.appendChild(bar);
+      }
+      row.appendChild(cell);
+      area.appendChild(row);
+      idx++;
+    });
+
+    wrap.appendChild(area);
+    chart.appendChild(wrap);
+    chart.style.opacity = '1';
+    chart.style.transform = 'none';
+  }
+
+  if(animate){
+    chart.style.transition = 'opacity 0.18s,transform 0.18s';
+    chart.style.opacity = '0';
+    chart.style.transform = 'translateY(5px)';
+    setTimeout(build, 190);
+  } else {
+    build();
+  }
+}
+
+document.getElementById('filters').addEventListener('click', e=>{
   if(!e.target.dataset.group) return;
   activeGroup = e.target.dataset.group;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.group===activeGroup));
-  render();
+  document.querySelectorAll('.filter-btn').forEach(b=>
+    b.classList.toggle('active', b.dataset.group===activeGroup)
+  );
+  render(true);
 });
 
-render();
+render(false);
 </script>
 </body>
 </html>
