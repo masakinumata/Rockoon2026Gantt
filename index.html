@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>えひめロックーン 2026 ガントチャート</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:#f9f8f5;padding:24px;}
+.gc-wrap{background:#fff;border-radius:12px;padding:24px 28px;max-width:1100px;margin:0 auto;border:0.5px solid #ddd;}
+.gc-header{margin-bottom:20px;}
+.gc-title{font-size:20px;font-weight:600;color:#1a1a18;margin-bottom:4px;}
+.gc-sub{font-size:13px;color:#888;}
+.filter-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.filter-btn{font-size:12px;padding:4px 12px;border-radius:8px;border:0.5px solid #bbb;background:#fff;color:#666;cursor:pointer;transition:all .15s;}
+.filter-btn.active{background:#e6f1fb;color:#185fa5;border-color:transparent;}
+.filter-btn:hover{background:#f1efe8;}
+.chart-area{overflow-x:auto;}
+.inner{min-width:900px;}
+.month-hdr{display:flex;margin-bottom:6px;}
+.task-row{display:flex;align-items:center;margin-bottom:3px;}
+.task-label{font-size:12px;color:#2c2c2a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:8px;flex-shrink:0;}
+.task-label.sub{color:#888;font-size:11px;padding-left:12px;}
+.bar-cell{position:relative;height:22px;flex-shrink:0;}
+.bar{position:absolute;top:3px;height:16px;border-radius:4px;display:flex;align-items:center;padding:0 6px;font-size:10px;font-weight:500;white-space:nowrap;overflow:hidden;cursor:default;}
+.bar.blue{background:#B5D4F4;color:#0C447C;}
+.bar.teal{background:#9FE1CB;color:#085041;}
+.bar.amber{background:#FAC775;color:#633806;}
+.bar.coral{background:#F5C4B3;color:#712B13;}
+.bar.purple{background:#CECBF6;color:#3C3489;}
+.bar.green{background:#C0DD97;color:#27500A;}
+.bar.gray{background:#D3D1C7;color:#444441;}
+.bar.pink{background:#F4C0D1;color:#72243E;}
+.milestone{position:absolute;top:50%;transform:translateY(-50%) rotate(45deg);width:13px;height:13px;background:#E24B4A;border-radius:2px;cursor:default;}
+.section-label{font-size:11px;font-weight:600;color:#888;padding:8px 0 2px;letter-spacing:.04em;}
+.today-line{position:absolute;top:0;bottom:0;width:1.5px;background:#E24B4A;opacity:.65;pointer-events:none;z-index:3;}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px;padding-top:16px;border-top:0.5px solid #e5e3db;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#666;}
+.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:3px;}
+.done{background:#639922;}.inprog{background:#BA7517;}.todo{background:#888780;}
+</style>
+</head>
+<body>
+<div class="gc-wrap">
+  <div class="gc-header">
+    <div class="gc-title">えひめロックーン 2026 ガントチャート</div>
+    <div class="gc-sub">6月〜8月 ／ 班別タスク・試験スケジュール（議事録・試験一覧・審査書より作成）</div>
+  </div>
+
+  <div class="filter-row" id="filters">
+    <button class="filter-btn active" data-group="all">すべて</button>
+    <button class="filter-btn" data-group="overall">全体</button>
+    <button class="filter-btn" data-group="ignition">点火</button>
+    <button class="filter-btn" data-group="attitude">姿勢</button>
+    <button class="filter-btn" data-group="separation">分離</button>
+    <button class="filter-btn" data-group="observation">観測</button>
+    <button class="filter-btn" data-group="camera">カメラ</button>
+    <button class="filter-btn" data-group="structure">構造</button>
+    <button class="filter-btn" data-group="avionics">電装</button>
+  </div>
+
+  <div class="chart-area">
+    <div class="inner" id="chart"></div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#B5D4F4;"></div>全体</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#F5C4B3;"></div>点火</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#CECBF6;"></div>姿勢</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#9FE1CB;"></div>分離</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#FAC775;"></div>観測</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#C0DD97;"></div>カメラ</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#D3D1C7;"></div>構造</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#F4C0D1;"></div>電装</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#E24B4A;border-radius:2px;transform:rotate(45deg);"></div>マイルストーン</div>
+    <div class="legend-item"><span class="status-dot done"></span>完了</div>
+    <div class="legend-item"><span class="status-dot inprog"></span>進行中</div>
+    <div class="legend-item"><span class="status-dot todo"></span>未着手</div>
+  </div>
+</div>
+
+<script>
+const START = new Date(2026,5,1);
+const END   = new Date(2026,8,30);
+const TOTAL_DAYS = (END - START) / 86400000;
+const TODAY = new Date(2026,5,1);
+const LABEL_W = 170;
+const BAR_W   = 660;
+
+function dayOf(d){ return (new Date(d) - START) / 86400000; }
+function pct(d){ return Math.max(0, Math.min(100, dayOf(d) / TOTAL_DAYS * 100)); }
+function pctSpan(s,e){
+  const sp = pct(s), ep = pct(e);
+  return {left: sp+'%', width: Math.max(ep-sp, 1.2)+'%'};
+}
+
+const tasks = [
+  {group:'overall', section:'全体', label:'審査書提出', sub:false, start:'2026-06-01', end:'2026-06-08', color:'blue', status:'inprog', note:'ペイロード・電装・試験一覧を含む'},
+  {group:'overall', section:'', label:'OBGミッションレビュー会', sub:false, start:'2026-06-14', end:'2026-06-14', color:'blue', status:'todo', note:'6/14（日）確定', milestone:true},
+  {group:'overall', section:'', label:'2次審査書提出', sub:false, start:'2026-08-10', end:'2026-08-20', color:'blue', status:'todo', note:'8月中旬'},
+  {group:'overall', section:'', label:'ロングラン試験（宇都宮）', sub:false, start:'2026-08-20', end:'2026-08-31', color:'blue', status:'todo', note:'エスペック予定次第'},
+
+  {group:'ignition', section:'点火', label:'低圧点火試験（開発）', sub:false, start:'2026-06-01', end:'2026-06-15', color:'coral', status:'inprog', note:'もう1回実施予定。プラグ製法確立'},
+  {group:'ignition', section:'', label:'点火基板発注・動作確認', sub:false, start:'2026-06-10', end:'2026-06-25', color:'coral', status:'todo', note:'担当：沼田。6月中旬発注'},
+  {group:'ignition', section:'', label:'低温低圧点火試験（開発）', sub:false, start:'2026-06-15', end:'2026-07-15', color:'coral', status:'todo', note:'低圧成功後に移行'},
+  {group:'ignition', section:'', label:'ヒーター試験（常温・低温）', sub:false, start:'2026-06-10', end:'2026-07-10', color:'coral', status:'inprog', note:'酒井担当。再試験予定'},
+  {group:'ignition', section:'', label:'イグナイタープラグ振動試験', sub:true, start:'2026-07-01', end:'2026-07-20', color:'coral', status:'todo', note:''},
+  {group:'ignition', section:'', label:'ロケット発射試験（Wランチャー）', sub:false, start:'2026-07-10', end:'2026-08-01', color:'coral', status:'todo', note:'審査書後からロケット製作開始'},
+  {group:'ignition', section:'', label:'低温低圧シーケンス確認試験', sub:true, start:'2026-07-15', end:'2026-08-10', color:'coral', status:'todo', note:''},
+  {group:'ignition', section:'', label:'点火統合試験（FM）', sub:false, start:'2026-07-21', end:'2026-07-31', color:'coral', status:'todo', note:'ランチャーFMとセット'},
+
+  {group:'attitude', section:'姿勢', label:'しめじ1号機改 組み立て・試験', sub:false, start:'2026-06-01', end:'2026-06-20', color:'purple', status:'inprog', note:'印刷中→三嶋担当。試験は木村'},
+  {group:'attitude', section:'', label:'姿勢基板BBM発注・動作確認', sub:false, start:'2026-06-10', end:'2026-06-30', color:'purple', status:'todo', note:'担当：田嶋。6月中旬発注'},
+  {group:'attitude', section:'', label:'CMGトルク測定', sub:true, start:'2026-06-15', end:'2026-06-30', color:'purple', status:'todo', note:'1号機改で計測。トルク不足の懸念あり'},
+  {group:'attitude', section:'', label:'しめじ3号機 構造・電装設計', sub:false, start:'2026-06-01', end:'2026-07-15', color:'purple', status:'inprog', note:'構造：佐々木。ICMテスト完了'},
+  {group:'attitude', section:'', label:'3号機全機能動作試験（開発）', sub:false, start:'2026-07-01', end:'2026-07-25', color:'purple', status:'todo', note:'すべての機能が問題なく使えるか確認'},
+  {group:'attitude', section:'', label:'水密ボックス水密試験（開発）', sub:true, start:'2026-07-10', end:'2026-07-31', color:'purple', status:'todo', note:''},
+  {group:'attitude', section:'', label:'3号機低温低圧試験（認定）', sub:false, start:'2026-07-20', end:'2026-08-15', color:'purple', status:'todo', note:'認定試験'},
+
+  {group:'separation', section:'分離', label:'引張試験・最終方式決定', sub:false, start:'2026-06-01', end:'2026-06-20', color:'teal', status:'inprog', note:'古寺案 vs 三嶋案。サーボ選定も'},
+  {group:'separation', section:'', label:'分離基板発注（3種）', sub:false, start:'2026-06-10', end:'2026-06-25', color:'teal', status:'todo', note:'アップリンク:青山 サーボBBM:櫻井 ニクロム線BBM:築山'},
+  {group:'separation', section:'', label:'本番搭載モデル製作', sub:false, start:'2026-06-20', end:'2026-07-15', color:'teal', status:'todo', note:'方式確定後すぐ開始'},
+  {group:'separation', section:'', label:'認定試験（低温耐久・引張・スイング）', sub:false, start:'2026-06-25', end:'2026-08-15', color:'teal', status:'todo', note:'6末〜8中旬。2時間耐久・振幅30°×100回'},
+  {group:'separation', section:'', label:'水密試験', sub:true, start:'2026-07-01', end:'2026-08-01', color:'teal', status:'todo', note:''},
+
+  {group:'observation', section:'観測', label:'ミューオン部品調達・回路設計', sub:false, start:'2026-06-01', end:'2026-07-01', color:'amber', status:'inprog', note:'最大ボトルネック。酒井父の検出器流用'},
+  {group:'observation', section:'', label:'センサー統合（ユニバーサル基板）', sub:false, start:'2026-06-01', end:'2026-06-20', color:'amber', status:'inprog', note:'5月中から継続'},
+  {group:'observation', section:'', label:'観測基板発注', sub:false, start:'2026-06-10', end:'2026-06-25', color:'amber', status:'todo', note:'6月中旬'},
+  {group:'observation', section:'', label:'水密対応', sub:false, start:'2026-06-20', end:'2026-07-31', color:'amber', status:'todo', note:'6月後半〜期末'},
+  {group:'observation', section:'', label:'ペイロード完成', sub:false, start:'2026-07-20', end:'2026-08-05', color:'amber', status:'todo', note:'8月頭が目標'},
+
+  {group:'camera', section:'カメラ', label:'トラッカー製作完了', sub:false, start:'2026-06-01', end:'2026-06-08', color:'green', status:'inprog', note:'審査書までに完成。一発勝負の発泡加工'},
+  {group:'camera', section:'', label:'ESP低圧試験', sub:true, start:'2026-06-05', end:'2026-06-25', color:'green', status:'todo', note:'低温試験は成功済み'},
+  {group:'camera', section:'', label:'GoPro原因究明・低温試験', sub:false, start:'2026-06-10', end:'2026-07-10', color:'green', status:'todo', note:'くろちゃん問題の解消'},
+  {group:'camera', section:'', label:'Insta360 高温試験・水密試験', sub:false, start:'2026-06-15', end:'2026-07-20', color:'green', status:'todo', note:'ヒートシンク+遮熱ケース検証'},
+  {group:'camera', section:'', label:'各カメラ 低温低圧耐久試験（認定）', sub:false, start:'2026-07-01', end:'2026-08-10', color:'green', status:'todo', note:'GoPro・Insta360・ESP全て'},
+  {group:'camera', section:'', label:'カメラ統合試験', sub:false, start:'2026-08-05', end:'2026-08-20', color:'green', status:'todo', note:'全カメラ同時動作確認'},
+
+  {group:'structure', section:'構造', label:'ランチャーEM設計→審査書掲載', sub:false, start:'2026-06-01', end:'2026-06-08', color:'gray', status:'inprog', note:'水密BOX仕様確定が前提'},
+  {group:'structure', section:'', label:'ランチャー・ロケット製作（FM）', sub:false, start:'2026-06-14', end:'2026-07-07', color:'gray', status:'todo', note:'審査書提出後スタート'},
+  {group:'structure', section:'', label:'ランチャーFM試験（点火統合）', sub:false, start:'2026-07-21', end:'2026-07-28', color:'gray', status:'todo', note:''},
+  {group:'structure', section:'', label:'FM予備製作', sub:false, start:'2026-07-28', end:'2026-08-14', color:'gray', status:'todo', note:''},
+  {group:'structure', section:'', label:'パラシュート製作（大中小）', sub:false, start:'2026-06-14', end:'2026-07-31', color:'gray', status:'todo', note:'新入生も参加予定'},
+  {group:'structure', section:'', label:'パラシュート落下試験', sub:true, start:'2026-07-15', end:'2026-08-15', color:'gray', status:'todo', note:''},
+  {group:'structure', section:'', label:'浮力試験・M2E試験', sub:true, start:'2026-07-20', end:'2026-08-20', color:'gray', status:'todo', note:'2次審査書まで'},
+
+  {group:'avionics', section:'電装', label:'全基板設計確定・一括発注', sub:false, start:'2026-06-01', end:'2026-06-20', color:'pink', status:'inprog', note:'点火・姿勢・分離（3種）・観測'},
+  {group:'avionics', section:'', label:'基板動作確認（全班）', sub:false, start:'2026-06-20', end:'2026-07-10', color:'pink', status:'todo', note:'届き次第すぐ確認'},
+  {group:'avionics', section:'', label:'地上局設計・通信試験（LoRa）', sub:false, start:'2026-06-08', end:'2026-07-15', color:'pink', status:'todo', note:'担当：佐藤。審査書後スタート'},
+  {group:'avionics', section:'', label:'電装認定試験（低温・通信）', sub:false, start:'2026-07-01', end:'2026-08-15', color:'pink', status:'todo', note:''},
+  {group:'avionics', section:'', label:'全体統合試験', sub:false, start:'2026-08-10', end:'2026-08-28', color:'pink', status:'todo', note:'全ミッション統合'},
+];
+
+let activeGroup = 'all';
+
+function render(){
+  const vis = activeGroup === 'all' ? tasks : tasks.filter(t => t.group === activeGroup);
+  const chart = document.getElementById('chart');
+  chart.innerHTML = '';
+  const COL_W = LABEL_W + BAR_W;
+  const wrap = document.createElement('div');
+  wrap.style.cssText = `position:relative;width:${COL_W}px;`;
+
+  // Month headers
+  const hdr = document.createElement('div');
+  hdr.style.cssText = 'display:flex;margin-bottom:4px;';
+  const lbl0 = document.createElement('div');
+  lbl0.style.cssText = `width:${LABEL_W}px;flex-shrink:0;`;
+  hdr.appendChild(lbl0);
+  const monthWrap = document.createElement('div');
+  monthWrap.style.cssText = `width:${BAR_W}px;position:relative;display:flex;`;
+  const months = ['6月','7月','8月'];
+  const mStarts = [new Date(2026,5,1),new Date(2026,6,1),new Date(2026,7,1)];
+  const mEnds   = [new Date(2026,6,1),new Date(2026,7,1),new Date(2026,8,30)];
+  months.forEach((m,i) => {
+    const d = document.createElement('div');
+    const w = (mEnds[i]-mStarts[i])/86400000/TOTAL_DAYS*100;
+    d.style.cssText = `width:${w}%;font-size:11px;font-weight:600;color:#888;padding-left:4px;border-left:0.5px solid #ddd;`;
+    d.textContent = m;
+    monthWrap.appendChild(d);
+  });
+  hdr.appendChild(monthWrap);
+  wrap.appendChild(hdr);
+
+  const barArea = document.createElement('div');
+  barArea.style.cssText = 'position:relative;';
+
+  // Today line
+  const todayX = LABEL_W + pct(TODAY)/100*BAR_W;
+  const tl = document.createElement('div');
+  tl.className = 'today-line';
+  tl.style.left = todayX+'px';
+  barArea.appendChild(tl);
+
+  let lastSec = '';
+  vis.forEach(t => {
+    if(t.section && t.section !== lastSec){
+      lastSec = t.section;
+      const sec = document.createElement('div');
+      sec.className = 'section-label';
+      sec.style.cssText = `padding-left:${LABEL_W}px;`;
+      sec.textContent = t.section;
+      barArea.appendChild(sec);
+    }
+    const row = document.createElement('div');
+    row.className = 'task-row';
+
+    const lbl = document.createElement('div');
+    lbl.className = 'task-label'+(t.sub?' sub':'');
+    lbl.style.cssText = `width:${LABEL_W}px;`;
+    lbl.textContent = t.label;
+    lbl.title = t.label+(t.note?'\n'+t.note:'');
+    row.appendChild(lbl);
+
+    const cell = document.createElement('div');
+    cell.className = 'bar-cell';
+    cell.style.cssText = `width:${BAR_W}px;position:relative;height:22px;`;
+
+    if(t.milestone){
+      const ms = document.createElement('div');
+      ms.className = 'milestone';
+      ms.style.left = (pct(t.start)/100*BAR_W - 6.5)+'px';
+      ms.title = t.label+(t.note?'\n'+t.note:'');
+      cell.appendChild(ms);
+    } else {
+      const p = pctSpan(t.start, t.end);
+      const bar = document.createElement('div');
+      bar.className = 'bar '+t.color;
+      bar.style.left = parseFloat(p.left)/100*BAR_W+'px';
+      bar.style.width = parseFloat(p.width)/100*BAR_W+'px';
+      bar.title = t.label+(t.note?'\n'+t.note:'');
+      const dot = document.createElement('span');
+      dot.className = 'status-dot '+t.status;
+      dot.style.cssText = 'display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:3px;flex-shrink:0;';
+      bar.appendChild(dot);
+      const bw = parseFloat(p.width)/100*BAR_W;
+      if(bw > 55){
+        const txt = document.createTextNode(t.label.length>14?t.label.substring(0,13)+'…':t.label);
+        bar.appendChild(txt);
+      }
+      cell.appendChild(bar);
+    }
+    row.appendChild(cell);
+    barArea.appendChild(row);
+  });
+
+  wrap.appendChild(barArea);
+  chart.appendChild(wrap);
+}
+
+document.getElementById('filters').addEventListener('click', e => {
+  if(!e.target.dataset.group) return;
+  activeGroup = e.target.dataset.group;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.group===activeGroup));
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
